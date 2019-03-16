@@ -1,0 +1,87 @@
+{
+	"plugin_id": "lam",
+	"name_fr": "LAM Light AlarM",
+	"icon": "lam.png",
+	"version": "1.03",
+	"creation_date": "2019-03-15",
+	"modification_date": "2019-03-15",
+	"author": "Influman",
+	"description_fr": "Contrôlez le Light AlarM (LAM) de <a target='_blank' href='https://www.madomotic.fr/'>MaDomotic</a> via son API",
+	"description_en": "",
+	"description_es": "",
+	"description_it": "",
+	"description_de": "",
+	"forum_link": "https://forum.eedomus.com/viewtopic.php?t=8163",
+	"parameters":
+  [
+	{
+			"parameter": "NUM", 
+			"description": "LAM n°",
+			"xtype": "textfield",
+			"default_value": "1",
+			"field": "width:50, allowBlank:true"
+    },
+	{
+			"parameter": "IP", 
+			"description": "Adresse IP locale du LAM",
+			"xtype": "textfield",
+			"default_value": "192.168.0.",
+			"field": "width:130, allowBlank:false, maskRe:/[0-9.]/, regex:/^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])$/, regexText:'Adresse IP invalide [0-255].[0-255].[0-255].[0-255]'"
+    }  
+  ],
+	"devices":
+	[
+		{
+			"device_id": "controlam",
+			"module_id": "41",
+			"type": "http",
+			"name_fr": "Contrôles LAM #plugin.parameters.NUM",
+			"icon": "hw0045.png",
+			"utilisation_id": "43",
+			"parameters":
+			{
+				"VAR1": "plugin.parameters.IP",
+				"VAR2": "255",
+				"VAR3": "50",
+				"value_type": "list",
+				"ignore_errors": 3,
+				"RAW_URL": "",
+				"RAW_XPATH": "",
+				"POLLING": "0"
+			},
+			"values":
+			[
+				{ "value": "0", "description": "Off", "icon": "lamoff.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=off" },
+				{ "value": "1", "description": "Blue", "icon": "lamblue.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=blue" },
+				{ "value": "2", "description": "Red", "icon": "lamred.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=red" },
+				{ "value": "3", "description": "Green", "icon": "lamgreen.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=green" },
+				{ "value": "4", "description": "Yellow", "icon": "lamyellow.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=yellow" },
+				{ "value": "5", "description": "Cyan", "icon": "lamcyan.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=cyan" },
+				{ "value": "6", "description": "Orange", "icon": "lamorange.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=orange" },
+				{ "value": "7", "description": "Purple", "icon": "lampurple.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=purple" },
+				{ "value": "8", "description": "Pink", "icon": "lampink.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=pink" },
+				{ "value": "9", "description": "White", "icon": "lamwhite.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=white" },
+				{ "value": "10", "description": "Strobe White", "icon": "lamwhite.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=strobe&bright=[VAR2]&speed=[VAR3]&color=white" },
+				{ "value": "11", "description": "Strobe Red", "icon": "lamred.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=strobe&bright=[VAR2]&speed=[VAR3]&color=red" },
+				{ "value": "12", "description": "Strobe Green", "icon": "lamgreen.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=strobe&bright=[VAR2]&speed=[VAR3]&color=green" },
+				{ "value": "15", "description": "Strobe White 10s", "icon": "lamwhite.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=strobe&bright=[VAR2]&speed=[VAR3]&color=white&delay=10" },
+				{ "value": "16", "description": "Strobe Red 10s", "icon": "lamred.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=strobe&bright=[VAR2]&speed=[VAR3]&color=red&delay=10" },
+				{ "value": "17", "description": "Strobe Green 10s", "icon": "lamgreen.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=strobe&bright=[VAR2]&speed=[VAR3]&color=green&delay=10" },
+				{ "value": "20", "description": "Wheel White", "icon": "lamwhite.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=wheel&bright=[VAR2]&speed=[VAR3]&color=white" },
+				{ "value": "21", "description": "Wheel Red", "icon": "lamred.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=wheel&bright=[VAR2]&speed=[VAR3]&color=red" },
+				{ "value": "22", "description": "Wheel Green", "icon": "lamgreen.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=wheel&bright=[VAR2]&speed=[VAR3]&color=green" },
+				{ "value": "25", "description": "Wheel White 10s", "icon": "lamwhite.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=wheel&bright=[VAR2]&speed=[VAR3]&color=white&delay=10" },
+				{ "value": "26", "description": "Wheel Red 10s", "icon": "lamred.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=wheel&bright=[VAR2]&speed=[VAR3]&color=red&delay=10" },
+				{ "value": "27", "description": "Wheel Green 10s", "icon": "lamgreen.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=wheel&bright=[VAR2]&speed=[VAR3]&color=green&delay=10" },
+				{ "value": "30", "description": "Fade White", "icon": "lamwhite.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=fade&bright=[VAR2]&speed=[VAR3]&color=white" },
+				{ "value": "31", "description": "Fade Red", "icon": "lamred.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=fade&bright=[VAR2]&speed=[VAR3]&color=red" },
+				{ "value": "32", "description": "Fade Green", "icon": "lamgreen.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=fade&bright=[VAR2]&speed=[VAR3]&color=green" },
+				{ "value": "35", "description": "Fade White 10s", "icon": "lamwhite.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=fade&bright=[VAR2]&speed=[VAR3]&color=white&delay=10" },
+				{ "value": "36", "description": "Fade Red 10s", "icon": "lamred.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=fade&bright=[VAR2]&speed=[VAR3]&color=red&delay=10" },
+				{ "value": "37", "description": "Fade Green 10s", "icon": "lamgreen.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=fade&bright=[VAR2]&speed=[VAR3]&color=green&delay=10" }
+			]
+		}
+	]
+}
+
+
