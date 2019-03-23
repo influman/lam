@@ -1,12 +1,12 @@
 {
 	"plugin_id": "lam",
-	"name_fr": "LAM Light AlarM",
+	"name_fr": "Light AlarM",
 	"icon": "lam.png",
-	"version": "1.03",
+	"version": "1.1",
 	"creation_date": "2019-03-15",
-	"modification_date": "2019-03-15",
+	"modification_date": "2019-03-16",
 	"author": "Influman",
-	"description_fr": "Contrôlez le Light AlarM (LAM) de <a target='_blank' href='https://www.madomotic.fr/'>MaDomotic</a> via son API",
+	"description_fr": "Contrôlez le Light AlarM (LAM/SLAM) de <a target='_blank' href='https://www.madomotic.fr/'>MaDomotic</a> via son API",
 	"description_en": "",
 	"description_es": "",
 	"description_it": "",
@@ -35,8 +35,8 @@
 			"device_id": "controlam",
 			"module_id": "41",
 			"type": "http",
-			"name_fr": "Contrôles LAM #plugin.parameters.NUM",
-			"icon": "hw0045.png",
+			"name_fr": "Contrôle LAM #plugin.parameters.NUM",
+			"icon": "lam.png",
 			"utilisation_id": "43",
 			"parameters":
 			{
