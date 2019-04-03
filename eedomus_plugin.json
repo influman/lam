@@ -2,83 +2,192 @@
 	"plugin_id": "lam",
 	"name_fr": "Light AlarM",
 	"icon": "lam.png",
-	"version": "1.1",
+	"version": "1.5",
 	"creation_date": "2019-03-15",
-	"modification_date": "2019-03-16",
+	"modification_date": "2019-04-03",
 	"author": "Influman",
 	"description_fr": "Contrôlez le Light AlarM (LAM/SLAM) de <a target='_blank' href='https://www.madomotic.fr/'>MaDomotic</a> via son API",
 	"description_en": "",
 	"description_es": "",
 	"description_it": "",
 	"description_de": "",
-	"forum_link": "https://forum.eedomus.com/viewtopic.php?t=8163",
+	"forum_link": "https://forum.eedomus.com/viewtopic.php?t=8227",
 	"parameters":
   [
 	{
 			"parameter": "NUM", 
-			"description": "LAM n°",
+			"description": "(S)LAM n°",
 			"xtype": "textfield",
 			"default_value": "1",
 			"field": "width:50, allowBlank:true"
     },
 	{
 			"parameter": "IP", 
-			"description": "Adresse IP locale du LAM",
+			"description": "Adresse IP locale du (S)LAM",
 			"xtype": "textfield",
-			"default_value": "192.168.0.",
+			"default_value": "192.168.",
 			"field": "width:130, allowBlank:false, maskRe:/[0-9.]/, regex:/^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])$/, regexText:'Adresse IP invalide [0-255].[0-255].[0-255].[0-255]'"
-    }  
+    },
+	{
+			"parameter": "VERSION",
+			"description": "Version",
+			"xtype": "combo",
+			"field": "width:150, allowBlank:false, store:[['LAM', 'LAM 7 LEDS'], ['SLAM', 'SLAM 12 LEDS']], triggerAction: 'all'"
+	},
+	{
+			"parameter": "TYPE",
+			"description": "Type SLAM",
+			"xtype": "combo",
+			"field": "width:150, allowBlank:false, store:[['0', '--'], ['1', 'SWITCH']], triggerAction: 'all'"
+	},
+	{
+			"parameter": "line2",
+			"description": "Pour le contrôle du SLAM Switch :",
+			"xtype": "displayfield",
+			"field": "style: 'padding: 3px;', value: ' '"
+			},
+			{
+			"parameter": "IPEED", 
+			"description": "Adresse IP locale de la box eedomus",
+			"xtype": "textfield",
+			"default_value": "192.168.",
+			"field": "width:130, allowBlank:false, maskRe:/[0-9.]/, regex:/^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])$/, regexText:'Adresse IP invalide [0-255].[0-255].[0-255].[0-255]'"
+    },
+	{
+            "parameter": "APIU", 
+            "description": "Code API User : ",
+            "xtype": "textfield",
+			"default_value": "",
+			"field": "width:150, allowBlank:false"
+	},
+	{
+			"parameter": "APIS", 
+            "description": "Code API Secret : ",
+            "xtype": "textfield",
+			"default_value": "",
+			"field": "width:150, allowBlank:false"
+	}
   ],
+  "scripts":
+	[
+		{
+			"name": "lightalarm.php"
+		}
+	],
 	"devices":
 	[
 		{
 			"device_id": "controlam",
 			"module_id": "41",
 			"type": "http",
-			"name_fr": "Contrôle LAM #plugin.parameters.NUM",
+			"name_fr": "plugin.parameters.VERSION #plugin.parameters.NUM - Contrôle",
 			"icon": "lam.png",
 			"utilisation_id": "43",
 			"parameters":
 			{
-				"VAR1": "plugin.parameters.IP",
-				"VAR2": "255",
-				"VAR3": "50",
+				"VAR1": "plugin.parameters.NUM,plugin.parameters.VERSION,plugin.parameters.IP",
+				"VAR2": "speed(50),bright(30),delay(10)",
+				"VAR3": "",
 				"value_type": "list",
 				"ignore_errors": 3,
 				"RAW_URL": "",
 				"RAW_XPATH": "",
-				"POLLING": "0"
+				"POLLING": "1"
 			},
 			"values":
 			[
-				{ "value": "0", "description": "Off", "icon": "lamoff.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=off" },
-				{ "value": "1", "description": "Blue", "icon": "lamblue.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=blue" },
-				{ "value": "2", "description": "Red", "icon": "lamred.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=red" },
-				{ "value": "3", "description": "Green", "icon": "lamgreen.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=green" },
-				{ "value": "4", "description": "Yellow", "icon": "lamyellow.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=yellow" },
-				{ "value": "5", "description": "Cyan", "icon": "lamcyan.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=cyan" },
-				{ "value": "6", "description": "Orange", "icon": "lamorange.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=orange" },
-				{ "value": "7", "description": "Purple", "icon": "lampurple.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=purple" },
-				{ "value": "8", "description": "Pink", "icon": "lampink.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=pink" },
-				{ "value": "9", "description": "White", "icon": "lamwhite.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=on&bright=[VAR2]&color=white" },
-				{ "value": "10", "description": "Strobe White", "icon": "lamwhite.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=strobe&bright=[VAR2]&speed=[VAR3]&color=white" },
-				{ "value": "11", "description": "Strobe Red", "icon": "lamred.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=strobe&bright=[VAR2]&speed=[VAR3]&color=red" },
-				{ "value": "12", "description": "Strobe Green", "icon": "lamgreen.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=strobe&bright=[VAR2]&speed=[VAR3]&color=green" },
-				{ "value": "15", "description": "Strobe White 10s", "icon": "lamwhite.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=strobe&bright=[VAR2]&speed=[VAR3]&color=white&delay=10" },
-				{ "value": "16", "description": "Strobe Red 10s", "icon": "lamred.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=strobe&bright=[VAR2]&speed=[VAR3]&color=red&delay=10" },
-				{ "value": "17", "description": "Strobe Green 10s", "icon": "lamgreen.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=strobe&bright=[VAR2]&speed=[VAR3]&color=green&delay=10" },
-				{ "value": "20", "description": "Wheel White", "icon": "lamwhite.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=wheel&bright=[VAR2]&speed=[VAR3]&color=white" },
-				{ "value": "21", "description": "Wheel Red", "icon": "lamred.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=wheel&bright=[VAR2]&speed=[VAR3]&color=red" },
-				{ "value": "22", "description": "Wheel Green", "icon": "lamgreen.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=wheel&bright=[VAR2]&speed=[VAR3]&color=green" },
-				{ "value": "25", "description": "Wheel White 10s", "icon": "lamwhite.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=wheel&bright=[VAR2]&speed=[VAR3]&color=white&delay=10" },
-				{ "value": "26", "description": "Wheel Red 10s", "icon": "lamred.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=wheel&bright=[VAR2]&speed=[VAR3]&color=red&delay=10" },
-				{ "value": "27", "description": "Wheel Green 10s", "icon": "lamgreen.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=wheel&bright=[VAR2]&speed=[VAR3]&color=green&delay=10" },
-				{ "value": "30", "description": "Fade White", "icon": "lamwhite.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=fade&bright=[VAR2]&speed=[VAR3]&color=white" },
-				{ "value": "31", "description": "Fade Red", "icon": "lamred.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=fade&bright=[VAR2]&speed=[VAR3]&color=red" },
-				{ "value": "32", "description": "Fade Green", "icon": "lamgreen.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=fade&bright=[VAR2]&speed=[VAR3]&color=green" },
-				{ "value": "35", "description": "Fade White 10s", "icon": "lamwhite.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=fade&bright=[VAR2]&speed=[VAR3]&color=white&delay=10" },
-				{ "value": "36", "description": "Fade Red 10s", "icon": "lamred.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=fade&bright=[VAR2]&speed=[VAR3]&color=red&delay=10" },
-				{ "value": "37", "description": "Fade Green 10s", "icon": "lamgreen.png", "http_url": "http://[VAR1]/api/leds", "http_type": "GET",  "http_params": "?set=fade&bright=[VAR2]&speed=[VAR3]&color=green&delay=10" }
+				{ "value": "0", "description": "Off", "icon": "lamoff.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=alloff" },
+				{ "value": "1", "description": "Blue", "icon": "lamblue.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=allon&bright=default&color=blue" },
+				{ "value": "2", "description": "Red", "icon": "lamred.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=allon&bright=default&color=red" },
+				{ "value": "3", "description": "Green", "icon": "lamgreen.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=allon&bright=default&color=green" },
+				{ "value": "4", "description": "Yellow", "icon": "lamyellow.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=allon&bright=default&color=yellow" },
+				{ "value": "5", "description": "Cyan", "icon": "lamcyan.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=allon&bright=default&color=cyan" },
+				{ "value": "6", "description": "Orange", "icon": "lamorange.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=allon&bright=default&color=orange" },
+				{ "value": "7", "description": "Purple", "icon": "lampurple.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=allon&bright=default&color=purple" },
+				{ "value": "8", "description": "Pink", "icon": "lampink.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=allon&bright=default&color=pink" },
+				{ "value": "9", "description": "White", "icon": "lamwhite.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=allon&bright=default&color=white" },
+				{ "value": "20", "description": "Strobe White", "icon": "lamwhite.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=strobe&bright=default&speed=default&color=white&delay=default" },
+				{ "value": "21", "description": "Strobe Red", "icon": "lamred.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=strobe&bright=default&speed=default&color=red&delay=default" },
+				{ "value": "22", "description": "Strobe Green", "icon": "lamgreen.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=strobe&bright=default&speed=default&color=green&delay=default" },
+				{ "value": "23", "description": "Wheel White", "icon": "lamwhite.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=wheel&bright=default&speed=default&color=white&delay=default" },
+				{ "value": "24", "description": "Wheel Red", "icon": "lamred.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=wheel&bright=default&speed=default&color=red&delay=default" },
+				{ "value": "25", "description": "Wheel Green", "icon": "lamgreen.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=wheel&bright=default&speed=default&color=green&delay=default" },
+				{ "value": "26", "description": "Fade White", "icon": "lamwhite.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=fade&bright=default&speed=default&color=white&delay=default" },
+				{ "value": "27", "description": "Fade Red", "icon": "lamred.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=fade&bright=default&speed=default&color=red&delay=default" },
+				{ "value": "28", "description": "Fade Green", "icon": "lamgreen.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=fade&bright=default&speed=default&color=green&delay=default" }
+				
+			]
+		},
+		{
+			"device_id": "switch",
+			"parent_id": "controlam",
+			"create": "plugin.parameters.TYPE",
+			"module_id": "41",
+			"type": "http",
+			"name_fr": "plugin.parameters.VERSION #plugin.parameters.NUM - Switch",
+			"icon": "slamswitch.png",
+			"utilisation_id": "43",
+			"parameters":
+			{
+				"VAR1": "plugin.parameters.NUM,plugin.parameters.VERSION,plugin.parameters.IP",
+				"VAR2": "speed(50),bright(30),delay(10)",
+				"VAR3": "",
+				"value_type": "list",
+				"ignore_errors": 3,
+				"RAW_URL": "http://localhost/script/?exec=lightalarm.php&server=[VAR1]&default=[VAR2]&action=getswitch",
+				"RAW_XPATH": "/LIGHTALARM/SWITCH",
+				"POLLING": "1"
+			},
+			"values":
+			[
+				{ "value": "0", "description": "Ready", "icon": "slamswitch.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]" },
+				{ "value": "10", "description": "Long-Press", "icon": "slamswitchl.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=longpress&color=blue" },
+				{ "value": "11", "description": "Short-Press", "icon": "slamswitchs.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=shortpress&color=blue"},
+				{ "value": "12", "description": "Double-Press", "icon": "slamswitchd.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=doublepress&color=blue"},
+				{ "value": "13", "description": "Triple-Press", "icon": "slamswitcht.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=triplepress&color=blue"},
+				{ "value": "14", "description": "Quadruple-Press", "icon": "slamswitchq.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=quadruplepress&color=blue"},
+				{ "value": "99", "description": "Switch Initialization", "icon": "slamswitch.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=initswitch&ipeed=plugin.parameters.IPEED&apis=plugin.parameters.APIS&apiu=plugin.parameters.APIU"}
+			
+			]
+		},
+		{
+			"device_id": "applis",
+			"parent_id": "controlam",
+			"create": "plugin.parameters.TYPE",
+			"module_id": "41",
+			"type": "http",
+			"name_fr": "plugin.parameters.VERSION #plugin.parameters.NUM - Apps",
+			"icon": "slamswitch.png",
+			"utilisation_id": "43",
+			"parameters":
+			{
+				"VAR1": "plugin.parameters.NUM,plugin.parameters.VERSION,plugin.parameters.IP",
+				"VAR2": "speed(50),bright(30),delay(10)",
+				"VAR3": "",
+				"value_type": "list",
+				"ignore_errors": 3,
+				"RAW_URL": "http://localhost/script/?exec=lightalarm.php&server=[VAR1]&default=[VAR2]&action=getstatus",
+				"RAW_XPATH": "/LIGHTALARM/STATUS",
+				"POLLING": "1"
+			},
+			"values":
+			[
+				{ "value": "0", "description": "Ready", "icon": "slamswitch.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]" },
+				{ "value": "1", "description": "Time", "icon": "slamtime.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=time&bright=default&delay=default" },
+				{ "value": "2", "description": "Patriot", "icon": "slampatriot.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=ledstab&bright=default&value=blue,blue,blue,off,white,white,white,off,red,red,red,off" },
+				{ "value": "3", "description": "Rainbow", "icon": "slamrainbow.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=ledstab&bright=default&value=purple,blue,cyan,green,yellow,orange,red,orange,yellow,green,cyan,blue" },
+				{ "value": "4", "description": "Eedomus", "icon": "slameedomus.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=ledstab&bright=default&value=green,green,green,green,yellow,yellow, yellow, yellow,yellow,yellow,yellow,yellow" },
+				{ "value": "10", "description": "Reset Timer 5mn", "icon": "slamtimer.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=timer&value=5" },
+				{ "value": "11", "description": "Stop Timer", "icon": "slamtimer.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=timer&value=stop" },
+				{ "value": "12", "description": "Timer Alert", "icon": "slamtimer.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]" },
+				{ "value": "15", "description": "Start Ping Monitor", "icon": "slamping.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=ping&value=123456,234567" },
+				{ "value": "16", "description": "Stop Ping Monitor", "icon": "slamping.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=ping&value=stop" },
+				{ "value": "17", "description": "Start Alarm Monitor", "icon": "slamalarm.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=alarm&value=132456,0" },
+				{ "value": "18", "description": "Stop Alarm Monitor", "icon": "slamalarm.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=alarm&value=stop" },
+				{ "value": "19", "description": "Start Delestage Monitor", "icon": "slamdelestage.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=delestage&value=1" },
+				{ "value": "20", "description": "Stop Delestage Monitor", "icon": "slamdelestage.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=delestage&value=stop" },
+				{ "value": "21", "description": "Start Injection Monitor", "icon": "slaminjection.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=injection&value=123456,100" },
+				{ "value": "22", "description": "Stop Injection Monitor", "icon": "slaminjection.png", "http_url": "http://localhost/script/?exec=lightalarm.php", "http_type": "GET",  "http_params": "&server=[VAR1]&default=[VAR2]&action=injection&value=stop" }
 			]
 		}
 	]
